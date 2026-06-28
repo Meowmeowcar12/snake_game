@@ -56,15 +56,8 @@ function clearCanvas() {
 
 function drawSnake() {
     snake.forEach((part, index) => {
-        // Draw glow
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = index === 0 ? COLOR_SNAKE_HEAD : COLOR_SNAKE_BODY;
-        
         ctx.fillStyle = index === 0 ? COLOR_SNAKE_HEAD : COLOR_SNAKE_BODY;
         ctx.fillRect(part.x * GRID_SIZE, part.y * GRID_SIZE, GRID_SIZE - 2, GRID_SIZE - 2);
-        
-        // Reset shadow for next drawing
-        ctx.shadowBlur = 0;
     });
 }
 
@@ -124,10 +117,11 @@ function spawnApple() {
     let newAppleX, newAppleY;
     let isCollision = true;
 
-    // Ensure apple doesn't spawn on the snake
+    // Ensure apple doesn't spawn on the snake or on the edges
     while (isCollision) {
-        newAppleX = Math.floor(Math.random() * TILE_COUNT);
-        newAppleY = Math.floor(Math.random() * TILE_COUNT);
+        // Generate coordinates between 1 and TILE_COUNT - 2 (exclusive of borders)
+        newAppleX = Math.floor(Math.random() * (TILE_COUNT - 2)) + 1;
+        newAppleY = Math.floor(Math.random() * (TILE_COUNT - 2)) + 1;
         
         isCollision = snake.some(part => part.x === newAppleX && part.y === newAppleY);
     }
