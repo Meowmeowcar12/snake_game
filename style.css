@@ -1,10 +1,10 @@
 :root {
-    --bg-color: #0b0c10;
-    --text-color: #c5c6c7;
-    --neon-green: #66fcf1;
-    --neon-green-dark: #45a29e;
-    --neon-red: #ff0055;
-    --neon-blue: #00f3ff;
+    --bg-color: #2e4d2e;
+    --text-color: #f0e6d2;
+    --primary-green: #4caf50;
+    --dark-green: #1b331b;
+    --earth-brown: #8b5a2b;
+    --light-brown: #cd853f;
 }
 
 * {
@@ -15,7 +15,7 @@
 
 body {
     background-color: var(--bg-color);
-    background-image: radial-gradient(circle at center, #1f2833 0%, #0b0c10 100%);
+    background-image: radial-gradient(circle at center, #3c613c 0%, #1b331b 100%);
     color: var(--text-color);
     font-family: 'Orbitron', sans-serif;
     display: flex;
@@ -31,11 +31,10 @@ body {
     align-items: center;
     gap: 20px;
     padding: 20px;
-    background: rgba(31, 40, 51, 0.4);
+    background: rgba(46, 77, 46, 0.85);
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(102, 252, 241, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(102, 252, 241, 0.2);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(76, 175, 80, 0.3);
+    border: 3px solid var(--earth-brown);
 }
 
 .header {
@@ -44,11 +43,12 @@ body {
 }
 
 .title {
-    color: var(--neon-green);
+    color: var(--primary-green);
     font-size: 2.5rem;
-    text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green-dark);
+    text-shadow: 2px 2px 0px var(--dark-green), 4px 4px 0px var(--earth-brown);
     letter-spacing: 2px;
     margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .score-board {
@@ -61,32 +61,34 @@ body {
 }
 
 .score-board p {
-    text-shadow: 0 0 5px var(--neon-blue);
-    color: var(--neon-blue);
+    color: var(--f0e6d2);
+    text-shadow: 1px 1px 2px #000;
 }
 
 .canvas-wrapper {
     position: relative;
     border-radius: 10px;
-    padding: 5px;
-    background: linear-gradient(45deg, var(--neon-green-dark), var(--neon-blue));
-    box-shadow: 0 0 15px var(--neon-green-dark);
+    padding: 10px;
+    background: var(--earth-brown);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
 canvas {
-    background-color: #050505;
+    background-color: #557a46;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 4px);
     border-radius: 5px;
     display: block;
     image-rendering: pixelated;
+    border: 2px solid var(--dark-green);
 }
 
 .overlay {
     position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    background: rgba(11, 12, 16, 0.85);
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: rgba(27, 51, 27, 0.85);
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -94,7 +96,6 @@ canvas {
     align-items: center;
     gap: 20px;
     z-index: 10;
-    backdrop-filter: blur(4px);
 }
 
 .overlay.hidden {
@@ -103,82 +104,48 @@ canvas {
 
 #overlay-title {
     font-size: 2rem;
-    color: var(--neon-red);
-    text-shadow: 0 0 10px var(--neon-red);
+    color: var(--light-brown);
+    text-shadow: 2px 2px 4px #000;
 }
 
 .glow-on-hover {
     width: 220px;
     height: 50px;
-    border: none;
+    border: 2px solid var(--light-brown);
     outline: none;
     color: #fff;
-    background: #111;
+    background: var(--earth-brown);
     cursor: pointer;
     position: relative;
-    z-index: 0;
     border-radius: 10px;
     font-family: 'Orbitron', sans-serif;
     font-size: 1.2rem;
     font-weight: bold;
     letter-spacing: 1px;
     transition: 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-.glow-on-hover:before {
-    content: '';
-    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    position: absolute;
-    top: -2px;
-    left:-2px;
-    background-size: 400%;
-    z-index: -1;
-    filter: blur(5px);
-    width: calc(100% + 4px);
-    height: calc(100% + 4px);
-    animation: glowing 20s linear infinite;
-    opacity: 0;
-    transition: opacity .3s ease-in-out;
-    border-radius: 10px;
+.glow-on-hover:hover {
+    background: var(--light-brown);
+    transform: translateY(-2px);
 }
 
 .glow-on-hover:active {
-    color: #000
-}
-
-.glow-on-hover:active:after {
-    background: transparent;
-}
-
-.glow-on-hover:hover:before {
-    opacity: 1;
-}
-
-.glow-on-hover:after {
-    z-index: -1;
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #111;
-    left: 0;
-    top: 0;
-    border-radius: 10px;
-}
-
-@keyframes glowing {
-    0% { background-position: 0 0; }
-    50% { background-position: 400% 0; }
-    100% { background-position: 0 0; }
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .controls-hint {
-    color: #888;
+    color: #a4c4a4;
     font-size: 0.9rem;
     letter-spacing: 1px;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 15px;
+    border-radius: 20px;
 }
 
 .controls-hint span {
-    color: var(--neon-green);
+    color: var(--light-brown);
     font-weight: bold;
 }

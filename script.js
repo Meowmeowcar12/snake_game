@@ -17,6 +17,16 @@ const COLOR_SNAKE_HEAD = "#66fcf1";
 const COLOR_SNAKE_BODY = "#45a29e";
 const COLOR_APPLE = "#ff0055";
 
+// Load Images
+const headImg = new Image();
+headImg.src = 'head.png';
+
+const bodyImg = new Image();
+bodyImg.src = 'body.png';
+
+const appleImg = new Image();
+appleImg.src = 'apple.png';
+
 // Game State
 let snake = [];
 let dx = 0;
@@ -39,12 +49,17 @@ function drawGame() {
     if (isGameOver) return;
 
     clearCanvas();
-    moveSnake();
-    checkCollision();
     
-    if (isGameOver) return;
+    // Only move and check collisions if the snake has started moving
+    if (dx !== 0 || dy !== 0) {
+        moveSnake();
+        checkCollision();
+        
+        if (isGameOver) return;
+        
+        checkAppleCollision();
+    }
     
-    checkAppleCollision();
     drawApple();
     drawSnake();
 }
@@ -56,28 +71,28 @@ function clearCanvas() {
 
 function drawSnake() {
     snake.forEach((part, index) => {
-        ctx.fillStyle = index === 0 ? COLOR_SNAKE_HEAD : COLOR_SNAKE_BODY;
-        ctx.fillRect(part.x * GRID_SIZE, part.y * GRID_SIZE, GRID_SIZE - 2, GRID_SIZE - 2);
+        if (index === 0) {
+            // Draw head with rotation
+            let angle = 0;
+            if (dy === -1) angle = 0; // Up
+            else if (dy === 1) angle = Math.PI; // Down
+            else if (dx === -1) angle = -Math.PI / 2; // Left
+            else if (dx === 1) angle = Math.PI / 2; // Right
+            
+            ctx.save();
+            ctx.translate(part.x * GRID_SIZE + GRID_SIZE / 2, part.y * GRID_SIZE + GRID_SIZE / 2);
+            ctx.rotate(angle);
+            ctx.drawImage(headImg, -GRID_SIZE / 2, -GRID_SIZE / 2, GRID_SIZE, GRID_SIZE);
+            ctx.restore();
+        } else {
+            // Draw body
+            ctx.drawImage(bodyImg, part.x * GRID_SIZE, part.y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        }
     });
 }
 
 function drawApple() {
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = COLOR_APPLE;
-    ctx.fillStyle = COLOR_APPLE;
-    
-    // Draw a slight curve/circle for the apple rather than a strict square
-    ctx.beginPath();
-    ctx.arc(
-        appleX * GRID_SIZE + GRID_SIZE/2, 
-        appleY * GRID_SIZE + GRID_SIZE/2, 
-        GRID_SIZE/2 - 2, 
-        0, 
-        2 * Math.PI
-    );
-    ctx.fill();
-    
-    ctx.shadowBlur = 0;
+    ctx.drawImage(appleImg, appleX * GRID_SIZE, appleY * GRID_SIZE, GRID_SIZE, GRID_SIZE);
 }
 
 function moveSnake() {
@@ -198,10 +213,16 @@ function gameOver() {
 }
 
 // Initial draw before start
-clearCanvas();
-drawApple();
-ctx.fillStyle = COLOR_SNAKE_HEAD;
-ctx.shadowBlur = 10;
-ctx.shadowColor = COLOR_SNAKE_HEAD;
-ctx.fillRect(10 * GRID_SIZE, 10 * GRID_SIZE, GRID_SIZE - 2, GRID_SIZE - 2);
-ctx.shadowBlur = 0;
+function initialDraw() {
+    clearCanvas();
+    if (appleImg.complete && headImg.complete) {
+        drawApple();
+        ctx.save();
+        ctx.translate(10 * GRID_SIZE + GRID_SIZE / 2, 10 * GRID_SIZE + GRID_SIZE / 2);
+        ctx.drawImage(headImg, -GRID_SIZE / 2, -GRID_SIZE / 2, GRID_SIZE, GRID_SIZE);
+        ctx.restore();
+    }
+}
+initialDraw();
+headImg.onload = initialDraw;
+appleImg.onload = initialDraw;
